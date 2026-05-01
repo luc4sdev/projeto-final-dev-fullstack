@@ -8,7 +8,6 @@ import { useState } from "react";
 import { useMutationHook } from "@/hooks/useMutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { DataTable, ColumnDef } from "@/components/ui/data-table";
-import { sendSchedulingCancellation, sendSchedulingConfirmation } from "@/utils/send-email";
 import { CancellationModal } from "./cancellation-modal";
 
 interface AppointmentsTableProps {
@@ -36,18 +35,7 @@ export function AppointmentsTable({ data, onSort, page = 1, totalPages = 1, onPa
         headers: {
             Authorization: `Bearer ${session?.user?.token}`
         },
-        onSuccess: async (data) => {
-            const { userEmail, userName, dateString, time, status, isAdmin } = data
-            if (status === 'CONFIRMED') {
-                try {
-                    await sendSchedulingConfirmation(userEmail, userName, dateString, time)
-                } catch { }
-            }
-            else if (status === 'CANCELLED') {
-                try {
-                    await sendSchedulingCancellation(userEmail, userName, dateString, time, isAdmin)
-                } catch { }
-            }
+        onSuccess: async () => {
             queryClient.invalidateQueries({ queryKey: ['schedules'] });
             toastMessage({ message: "Status atualizado com sucesso!", type: "success" });
             setLoadingId(null);

@@ -4,7 +4,6 @@ import { Room } from '../models/Room';
 import { User } from '../models/User';
 import { LogsService } from './log';
 import { statusMap } from '../utils/translate-status';
-import { MailService } from './mail';
 
 interface CreateScheduleDTO {
     userId: string;
@@ -27,11 +26,9 @@ interface ListFilter {
 export class SchedulesService {
 
     private logsService: LogsService;
-    private mailService: MailService;
 
     constructor() {
         this.logsService = new LogsService();
-        this.mailService = new MailService();
     }
 
     private timeToMinutes(time: string): number {
